@@ -1,0 +1,14 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    faraday (0.8.7)
+      multipart-post (~> 1.1)
+    multipart-post (1.2.0)
+    simple-xml (1.0.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  faraday
+  simple-xml

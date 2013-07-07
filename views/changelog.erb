@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <link href='http://fonts.googleapis.com/css?family=Lato:100' rel='stylesheet' type='text/css'>
+    <style>
+      body {font-family: arial; font-size: 12px}
+      h1,h2,h3 { font-weight: normal; margin: 0;margin-bottom: 0.5em }
+      h1 { font-family: "Lato-Light",Arial,"Helvetica Neue",Helvetica,sans-serif; color: #666; margin-bottom: 0 !important; }
+      a,span { color: #06c; font-weight: bold; }
+      .release {
+        margin: 0 auto 30px; 
+        width: 90%;
+        border-bottom: 1px dashed #ccc;
+        padding-bottom: 30px;
+      }
+      h2 {
+        margin-top: 16px;
+      }
+      em { font-style: normal }
+      /* em.Bug { background: red; font-style: normal; color: #fff; padding: 2px 5px; font-size: 12px;} */
+      /* em.Feature { background: green; font-style: normal; color: #fff; padding: 2px 5px; font-size: 12px;} */
+    </style>
+  </head>
+  <body>
+    <% issues.each do |version, issues| %>
+      <% if issues.length > 0 %>
+        <div class="release">
+          <h1><%= version %></h1>
+          <% last_type = nil %>
+          <% issues.each do |issue| %>
+            <% if last_type != issue[:type] %>
+              <h2><em class="<%= issue[:type] %>"><%= issue[:type] %></em></h2>
+              <% last_type = issue[:type] %>
+            <% end %>
+            <h3>
+            <% if params["static"] %> 
+              <span><%= issue[:id] %></span>
+            <% else %>
+              <a href="https://youtrack.intelie.net/issue/<%= issue[:id] %>"><%= issue[:id] %></a>
+            <% end %>
+            - <%= issue[:summary] %></h3>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </body>
+</html>
