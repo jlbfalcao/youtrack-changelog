@@ -1,14 +1,20 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    awesome_print (1.1.0)
+    blockenspiel (0.4.5)
     faraday (0.8.7)
       multipart-post (~> 1.1)
     multipart-post (1.2.0)
     simple-xml (1.0.0)
+    versionomy (0.4.4)
+      blockenspiel (>= 0.4.5)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  awesome_print
   faraday
   simple-xml
+  versionomy

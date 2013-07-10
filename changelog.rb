@@ -32,17 +32,30 @@ conn.headers['Cache-Control'] = 'no-cache'
 # load all released versions.
 response = conn.get "rest/admin/customfield/versionBundle/#{version_bundler}"
 versions = []
-REXML::Document.new(response.body).root.each_element do |version|
-  # REXML::Document.new(response.body).root.elements.each '//version[@released="true"]' do |version|
-  versions << version.text
+# REXML::Document.new(response.body).root.each_element do |version|
+REXML::Document.new(response.body).root.elements.each '//version[@released="true"]' do |version|
+  versions << Versionomy.parse(version.text)
 end
+
+# sort versions
+versions.sort! { |a,b| a <=> b }
+versions.reverse! # change order.
+versions.map!(&:to_s)
+
+ap versions
 
 # load all issues
 issues = {}
 versions.each do |version|
+  filter = "project: #{project} Fix versions: #{version} Affected versions: -#{version} visible to: {All Users} Type: Feature , Bug, Improvement order by: Type, Priority"
+  puts filter
   response = conn.get 'rest/issue', \
-    filter: "project: #{project} Fix versions: #{version} Affected versions: -#{version} visible to: {All Users} Type: Feature , Bug, Improvement order by: Type, Priority"
+    filter: filter,
+    max: 100
+
   issues[version] = REXML::Document.new(response.body).root.elements.to_a.map do |issue|
+    puts issue.attributes['id']
+    
     {
       id: issue.attributes['id'],
       summary: issue.elements['field[@name="summary"]/value'].text,
@@ -51,7 +64,7 @@ versions.each do |version|
   end
 end
 
-params = {}
+params = {"static" => true}
 File.open('changelog.html', 'w') {|f| f.write(ERB.new(File.new('views/changelog.erb').read).result) }
 
 # require 'sinatra'
